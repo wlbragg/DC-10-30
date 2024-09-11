@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!-- McDonnell Douglas DC-10-30 -->
+<!-- Aircraft property settings specific to the DC-10-30 -->
+
+<PropertyList include="DC-10Tanker-main.xml">
+
+    <sim>
+        <description>McDonnell Douglas DC-10 (tanker)</description>
+        <flight-model>yasim</flight-model>
+        <aero>DC-10-30</aero>
+        <variant-of>DC-10-30</variant-of>
+        
+        <model>
+            <path>Aircraft/DC-10-30/Models/DC-10Tanker.xml</path>
+            <livery>
+                <file>Blank-tanker</file>
+            </livery>
+			
+			<DC-10-30>
+				<effects>
+				  <particles>
+					<enabled type="bool">true</enabled>
+					<redcombined type="float">0</redcombined>
+					<greencombined type="float">0</greencombined>
+					<bluecombined type="float">0</bluecombined>
+				  </particles>
+				</effects>  
+			</DC-10-30>
+
+			<watercannon>
+				<tank-volume type="float">0</tank-volume>
+				<tank-weight type="float">0</tank-weight>
+			</watercannon>
+
+			<firetank>
+				<enabled type="bool">true</enabled>
+				<opentankdoors type="bool">1</opentankdoors>
+				<foam type="bool">0</foam>
+				<arm type="bool">1</arm>
+				<lowhydpres type="bool">0</lowhydpres>
+				<test type="bool">0</test>
+				<!-- quantity is 1, 2, 3 or 0 = safe -->
+				<!-- 1 = 33%, 2 = 66%, 3 = 100% -->
+				<quantity type="int">1</quantity>
+				<foamconcentrate type="int">0</foamconcentrate>
+				<droprate type="int">300</droprate><!-- for particles only -->
+				<waterdropparticlectrl type="bool">false</waterdropparticlectrl>
+				<waterdropretardantctrl type="bool">false</waterdropretardantctrl>
+				<retardantdropparticlectrl type="bool">false</retardantdropparticlectrl>
+			</firetank>
+			
+        </model>
+
+		<submodels>
+			<serviceable type="bool">true</serviceable>
+			<path>Aircraft/DC-10-30/Models/submodels.xml</path>
+		</submodels>
+		
+		<systems>
+			<property-rule n="100">
+				<path>Aircraft/DC-10-30/Systems/model-effects.xml</path>
+			</property-rule>
+		</systems>
+
+        <weight n="1">
+            <name>Fuel</name>
+        </weight>
+		<!-- 6764.85 lb each blader -->
+		<weight n="2">
+		  <name>Water Tank</name>
+		  <weight-lb>0</weight-lb>
+		  <max-lb>100140.00</max-lb>
+		  <min-lb>0</min-lb>
+		</weight>
+
+        <menubar>
+            <default>
+                <menu n="100">
+                    <label>McDonnell Douglas KC-10A</label>
+					<item n="100">
+						<label>Fill Fire Tank</label>
+						<binding>
+						  <command>property-assign</command>
+						  <property>sim/weight[2]/weight-lb</property>
+						  <value>100140</value>
+						</binding>
+					</item>
+					<item n="101">
+						<label>Set Retardant Coverage 33%</label>
+						<binding>
+						  <command>property-assign</command>
+						  <property>sim/model/firetank/quantity</property>
+						  <value>1</value>
+						</binding>
+					</item>
+					<item n="102">
+						<label>Set Retardant Coverage 66%</label>
+						<binding>
+						  <command>property-assign</command>
+						  <property>sim/model/firetank/quantity</property>
+						  <value>2</value>
+						</binding>
+					</item>
+					<item n="103">
+						<label>Set Retardant Coverage 100%</label>
+						<binding>
+						  <command>property-assign</command>
+						  <property>sim/model/firetank/quantity</property>
+						  <value>3</value>
+						</binding>
+					</item>
+					<item n="104">
+						<label>Use Retardant (default)</label>
+						<binding>
+						  <command>property-assign</command>
+						  <property>sim/model/firetank/foam</property>
+						  <value>0</value>
+						</binding>
+					</item>
+					<item n="105">
+						<label>Use Water</label>
+						<binding>
+						  <command>property-assign</command>
+						  <property>sim/model/firetank/foam</property>
+						  <value>1</value>
+						</binding>
+					</item>
+                </menu>
+			</default>
+		</menubar>
+
+	</sim>
+
+	<input>
+		<keyboard>
+			<!--key n="107">
+			  <name>k</name>
+			  <desc>Close Tank Doors</desc>
+			  <binding>
+				<command>property-toggle</command>
+				<property>sim/model/firetank/opencannonvalve</property>
+			  </binding>
+			</key-->
+
+			<key n="75">
+			  <name>K</name>
+			  <desc>Open Tank Doors</desc>
+			  <binding>
+				<command>nasal</command>
+				<script>
+				  if (getprop("sim/model/firetank/opentankdoors") == 0) {
+					if (getprop("sim/model/firetank/quantity") > 0) {
+					  setprop("sim/model/firetank/opentankdoors", 1);
+					} else {
+					  screen.log.write("Quantity set to safe!");
+					}
+				  }
+				</script>
+			  </binding>
+			</key>	
+		</keyboard>
+	</input>
+	
+    <instrumentation>
+        <!-- Radar for air-to-air refueling capability (required for receiving fuel only) -->
+        <radar>
+            <range type="int" archive="y">20</range>
+            <minimized type="bool" archive="y">false</minimized>
+        </radar>
+    </instrumentation>
+
+    <tanker type="bool">false</tanker>
+
+    <nasal>
+		<DC-10>
+			<file>Aircraft/DC-10-30/Nasal/tankoperations.nas</file>
+		</DC-10>
+        <aar>
+            <file>Aircraft/Generic/aar.nas</file>
+        </aar>
+    </nasal>
+
+</PropertyList>

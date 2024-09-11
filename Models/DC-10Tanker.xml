@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!-- McDonnell Douglas DC-10 -->
+<!-- Main model, DC-10-30 tanker -->
+
+<PropertyList>
+
+	<model>
+		<name>Fuselage</name>
+		<path>Aircraft/DC-10-30/Models/DC-10-30-fuselage.xml</path>
+	</model>
+	
+	<!-- firetank -->
+	<model>
+		<path>Aircraft/DC-10-30/Models/firetank.xml</path>
+		<offsets>
+		  <x-m> 0.00 </x-m>
+		  <y-m> 0.00 </y-m>
+		  <z-m> 0.10 </z-m>
+		</offsets>
+	</model>
+
+	<!-- Foam or Water drop -->
+	<model>
+		<path>Aircraft/DC-10-30/Models/Effects/waterdrop.xml</path>
+		<offsets>
+		  <x-m>-3.90 </x-m>
+		  <y-m> 0.00 </y-m>
+		  <z-m>-1.90 </z-m>
+		</offsets>
+	</model>
+
+	<!-- Foam or Water drop -->
+	<model>
+		<path>Aircraft/DC-10-30/Models/Effects/retardantdrop.xml</path>
+		<offsets>
+		  <x-m>-3.90 </x-m>
+		  <y-m> 0.00 </y-m>
+		  <z-m>-1.90 </z-m>
+		</offsets>
+	</model>
+
+	<foo include="DC-10Tanker-main.xml" omit-node="y" />
+
+</PropertyList>
