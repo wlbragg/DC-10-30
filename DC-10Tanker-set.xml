@@ -87,7 +87,7 @@
 						</binding>
 					</item>
 					<item n="101">
-						<label>Set Retardant Coverage 33%</label>
+						<label>Set Retardant Coverage 33% (default)</label>
 						<binding>
 						  <command>property-assign</command>
 						  <property>sim/model/firetank/quantity</property>
