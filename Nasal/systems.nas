@@ -371,7 +371,8 @@ var dialogs =
 	lights: gui.Dialog.new("sim/gui/dialogs/lights/dialog", "Aircraft/DC-10-30/Systems/lights-dlg.xml"),
 	doors: gui.Dialog.new("sim/gui/dialogs/doors/dialog", "Aircraft/DC-10-30/Systems/doors-dlg.xml"),
 	failures: gui.Dialog.new("sim/gui/dialogs/failures/dialog", "Aircraft/DC-10-30/Systems/failures-dlg.xml"),
-	tiller: gui.Dialog.new("sim/gui/dialogs/tiller/dialog", "Aircraft/DC-10-30/Systems/tiller-dlg.xml")
+	tiller: gui.Dialog.new("sim/gui/dialogs/tiller/dialog", "Aircraft/DC-10-30/Systems/tiller-dlg.xml"),
+	firetank: gui.Dialog.new("sim/gui/dialogs/firetank/dialog", "Aircraft/DC-10-30/Systems/firetank-dlg.xml")
 };
 gui.menuBind("autopilot", "DC10.dialogs.autopilot.open();");
 gui.menuBind("radio", "DC10.dialogs.radio.open();");

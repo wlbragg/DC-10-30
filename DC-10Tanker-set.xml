@@ -35,7 +35,7 @@
 
 			<firetank>
 				<enabled type="bool">true</enabled>
-				<opentankdoors type="bool">1</opentankdoors>
+				<opentankdoors type="bool">0</opentankdoors>
 				<foam type="bool">0</foam>
 				<arm type="bool">1</arm>
 				<lowhydpres type="bool">0</lowhydpres>
@@ -78,52 +78,13 @@
             <default>
                 <menu n="100">
                     <label>McDonnell Douglas KC-10A</label>
-					<item n="100">
-						<label>Fill Fire Tank</label>
+					<item  n="100">
+						<label>Fire Tank System</label>
 						<binding>
-						  <command>property-assign</command>
-						  <property>sim/weight[2]/weight-lb</property>
-						  <value>100140</value>
-						</binding>
-					</item>
-					<item n="101">
-						<label>Set Retardant Coverage 33% (default)</label>
-						<binding>
-						  <command>property-assign</command>
-						  <property>sim/model/firetank/quantity</property>
-						  <value>1</value>
-						</binding>
-					</item>
-					<item n="102">
-						<label>Set Retardant Coverage 66%</label>
-						<binding>
-						  <command>property-assign</command>
-						  <property>sim/model/firetank/quantity</property>
-						  <value>2</value>
-						</binding>
-					</item>
-					<item n="103">
-						<label>Set Retardant Coverage 100%</label>
-						<binding>
-						  <command>property-assign</command>
-						  <property>sim/model/firetank/quantity</property>
-						  <value>3</value>
-						</binding>
-					</item>
-					<item n="104">
-						<label>Use Retardant (default)</label>
-						<binding>
-						  <command>property-assign</command>
-						  <property>sim/model/firetank/foam</property>
-						  <value>0</value>
-						</binding>
-					</item>
-					<item n="105">
-						<label>Use Water</label>
-						<binding>
-						  <command>property-assign</command>
-						  <property>sim/model/firetank/foam</property>
-						  <value>1</value>
+							<command>nasal</command>
+							<script>
+							DC10.dialogs.firetank.open();
+							</script>
 						</binding>
 					</item>
                 </menu>

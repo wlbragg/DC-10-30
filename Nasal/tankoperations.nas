@@ -1,16 +1,15 @@
 setlistener("/sim/signals/fdm-initialized", func {
 
-	var tankop_timer = maketimer(0.25, func{tank_operations()});
+	var tankop_timer = maketimer(0.01, func{tank_operations()});
 
-	if (getprop("/sim/model/firetank/enabled"))
-	  tankop_timer.start();
-	else
-	  setlistener("/sim/model/firetank/enabled", func {
-		if (getprop("/sim/model/firetank/enabled"))
+	setlistener("/sim/model/firetank/opentankdoors", func {
+		if (getprop("/sim/model/firetank/opentankdoors") and getprop("/sim/model/firetank/enabled"))
 		  tankop_timer.start();
 		else {
 		  tankop_timer.stop();
 		  setprop("sim/model/firetank/opentankdoors", 0);
+		  setprop("sim/model/firetank/waterdropretardantctrl", 0);
+		  setprop("sim/model/firetank/retardantdropparticlectrl", 0);
 		}
 	  });
 });
@@ -22,7 +21,6 @@ setlistener("/sim/signals/fdm-initialized", func {
 var capacity = 0.0;
 var weight = 0.0;
 var volume = 0.0;
-var flow = 0.0;
 
 #optimize using listeners VS loop where possible
 var tank_operations = func {
@@ -69,27 +67,37 @@ var tank_operations = func {
     if (tankdooropen and hopperweight)
     {
 		#100% salvo dump load/velocities/equivalent-kt in 8 seconds
-        #quantity is one of 4 modes, safe and 33% 66% 100%
-        #capacity = 375 gal, equals full load in 8 seconds
+        #quantity is one of 4 modes, safe = 0 and 33% = 1 66% = 2 100% = 3
+		#retardant = 8.87 per lb
+		#water = 8.34 per lb
+		#retardant = 12000 gal * 8.87 weight per gal = 106440 lb / 8 sec dump = 13305 lb per sec / 100 (.01 seconds timer cycle) = 133.05 lb capacity per cycle
+		#retardant = 12000 gal / 8 sec dump = 1500 gal per sec / 100 (.01 seconds timer cycle) = 15 gal * 8.87 weight per gallon = 133.05 lbs capacity per cycle
+		#water = 12000 gal * 8.34 weight per gal = 100080 lb / 8 sec dump = 12510 lb per sec / 100 (.01 seconds timer cycle) = 125.1 lb capacity per cycle
+		#water = 12000 gal / 8 sec dump = 1500 gal per sec / 100 (.01 seconds timer cycle) = 15 gal * 8.34 weight per gallon = 125.1 lbs capacity per cycle
+		#retardent capacity = 133.05;
+		#water capacity = 125.1;
 
-        if (quantity == 1) weight = 33380.00;
-        else if (quantity == 2) weight = 66760.00;
-        else if (quantity == 3) weight = 100140.00;
-
-        #12000 gal * 8.345 weight per gal = 100140 lb / 8 sec dump = 12517.5 lb per sec / 4 (.25 seconds timer cycle) = 3129.37 lb per cycle
-        #12000 gal / 8 sec dump = 1500 gal per sec / 4 (.25 seconds timer cycle) = 375 gal * 8.345 weight per gallon = 3129.37 lbs capacity per cycle
-		
-        capacity = 3129.37;
-        flow = capacity;
+		if (foam) {
+			capacity = 125.1 * 8;
+			if (quantity == 1) weight = 33360;
+				else if (quantity == 2) weight = 66720;
+					else if (quantity == 3) weight = 100080;
+		} else {
+			capacity = 133.05 * 8;
+			if (quantity == 1) weight = 35480;
+				else if (quantity == 2) weight = 70960;
+					else if (quantity == 3) weight = 106440;
+		}
         setprop("sim/model/firetank/droprate", 400);
 
         if (volume < weight)
         {
-          if (flow > (weight-volume))
-            flow = (weight-volume);
 
-          volume = volume + flow;
-          hopperweight = hopperweight - flow;
+		  if (capacity > (weight-volume))
+            capacity = (weight-volume);
+
+          volume = volume + capacity;
+          hopperweight = hopperweight - capacity;
 
           if (hopperweight < 10)
             {
@@ -104,6 +112,8 @@ var tank_operations = func {
         else
         {
           setprop("sim/model/firetank/opentankdoors", 0);
+		  setprop("sim/model/firetank/waterdropretardantctrl", 0);
+		  setprop("sim/model/firetank/retardantdropparticlectrl", 0);
           volume = 0;
         }
     }
