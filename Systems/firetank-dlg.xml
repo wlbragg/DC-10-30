@@ -44,7 +44,14 @@
 		</binding>
 		<live type="bool">true</live>
 	</checkbox>
-
+	<hrule />
+	<group>
+		<layout>hbox</layout>
+		<halign>center</halign>
+		<text>
+			<label>0=Safe 1-3=Tank 4=Salvo</label>
+		</text>
+	</group>
 	<group>
 		<layout>hbox</layout>
 		<halign>left</halign>
@@ -60,7 +67,7 @@
 			<halign>left</halign>
 			<property>sim/model/firetank/quantity</property>
 			<min>0</min>
-			<max>3</max>
+			<max>4</max>
 			<step>1</step>
 			<binding>
 				<command>dialog-apply</command>
@@ -68,7 +75,13 @@
 			<live type="bool">true</live>
 		</slider>
 	</group>
-
+	<hrule /><group>
+		<layout>hbox</layout>
+		<halign>center</halign>
+		<text>
+			<label>Tank Fill Weight</label>
+		</text>
+	</group>
 	<group>
 		<layout>hbox</layout>
 		<halign>left</halign>

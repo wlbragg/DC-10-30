@@ -22,21 +22,53 @@
 
 	<!-- Foam or Water drop -->
 	<model>
-		<path>Aircraft/DC-10-30/Models/Effects/waterdrop.xml</path>
+		<path>Aircraft/DC-10-30/Models/Effects/waterdrop3.xml</path>
 		<offsets>
-		  <x-m>-3.90 </x-m>
+		  <x-m>-3.20 </x-m>
 		  <y-m> 0.00 </y-m>
-		  <z-m>-1.90 </z-m>
+		  <z-m>-3.00 </z-m>
+		</offsets>
+	</model>
+	<model>
+		<path>Aircraft/DC-10-30/Models/Effects/waterdrop2.xml</path>
+		<offsets>
+		  <x-m>-3.20 </x-m>
+		  <y-m> 0.00 </y-m>
+		  <z-m>-3.00 </z-m>
+		</offsets>
+	</model>
+	<model>
+		<path>Aircraft/DC-10-30/Models/Effects/waterdrop1.xml</path>
+		<offsets>
+		  <x-m>-3.20 </x-m>
+		  <y-m> 0.00 </y-m>
+		  <z-m>-3.00 </z-m>
 		</offsets>
 	</model>
 
-	<!-- Foam or Water drop -->
+	<!-- Retardant drop -->
 	<model>
-		<path>Aircraft/DC-10-30/Models/Effects/retardantdrop.xml</path>
+		<path>Aircraft/DC-10-30/Models/Effects/retardantdrop3.xml</path>
 		<offsets>
-		  <x-m>-3.90 </x-m>
+		  <x-m> 2.30 </x-m>
 		  <y-m> 0.00 </y-m>
-		  <z-m>-1.90 </z-m>
+		  <z-m>-3.00 </z-m>
+		</offsets>
+	</model>
+	<model>
+		<path>Aircraft/DC-10-30/Models/Effects/retardantdrop2.xml</path>
+		<offsets>
+		  <x-m>-4.20 </x-m>
+		  <y-m> 0.00 </y-m>
+		  <z-m>-3.00 </z-m>
+		</offsets>
+	</model>
+	<model>
+		<path>Aircraft/DC-10-30/Models/Effects/retardantdrop1.xml</path>
+		<offsets>
+		  <x-m>-11.00 </x-m>
+		  <y-m>  0.00 </y-m>
+		  <z-m> -3.00 </z-m>
 		</offsets>
 	</model>
 

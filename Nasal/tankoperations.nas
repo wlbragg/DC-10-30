@@ -1,17 +1,19 @@
+var delta_time = props.globals.getNode("/sim/time/delta-realtime-sec", 1);
+
 setlistener("/sim/signals/fdm-initialized", func {
 
-	var tankop_timer = maketimer(0.01, func{tank_operations()});
+    var tankop_timer = maketimer(0.01, func{tank_operations()});
 
-	setlistener("/sim/model/firetank/opentankdoors", func {
-		if (getprop("/sim/model/firetank/opentankdoors") and getprop("/sim/model/firetank/enabled"))
-		  tankop_timer.start();
-		else {
-		  tankop_timer.stop();
-		  setprop("sim/model/firetank/opentankdoors", 0);
-		  setprop("sim/model/firetank/waterdropretardantctrl", 0);
-		  setprop("sim/model/firetank/retardantdropparticlectrl", 0);
-		}
-	  });
+    setlistener("/sim/model/firetank/opentankdoors", func {
+        if (getprop("/sim/model/firetank/opentankdoors") and getprop("/sim/model/firetank/enabled")) {
+            tankop_timer.start();
+        } else {
+            tankop_timer.stop();
+            setprop("sim/model/firetank/opentankdoors", 0);
+            setprop("sim/model/firetank/waterdropretardantctrl", 0);
+            setprop("sim/model/firetank/retardantdropparticlectrl", 0);
+        }
+    });
 });
 
 #################### watertank ####################
@@ -38,105 +40,86 @@ var tank_operations = func {
     var foam = getprop("sim/model/firetank/foam");
     var hopperweight = getprop("sim/weight[2]/weight-lb");
     var groundspeed = getprop("velocities/groundspeed-kt");
-    #may want to use /velocities/equivalent-kt
     var airspeed = getprop("velocities/airspeed-kt");
     var particles = getprop("sim/model/DC-10-30/effects/particles/enabled");
-	var altitude = getprop("position/altitude-agl-ft");
-    var normalized = 1-(altitude-0)/(60-0);
+    var altitude = getprop("position/altitude-agl-ft");
+    var normalized = 1 - (altitude - 0) / (60 - 0);
     var quantity = getprop("sim/model/firetank/quantity");
 
     var red_diffuse = getprop("/rendering/scene/diffuse/red");
-	setprop("/sim/model/DC-10-30/effects/particles/redcombined",    red_diffuse*.95);
-	setprop("/sim/model/DC-10-30/effects/particles/greencombined",  red_diffuse*.98);
-	setprop("/sim/model/DC-10-30/effects/particles/bluecombined",   red_diffuse*1);
+    setprop("/sim/model/DC-10-30/effects/particles/redcombined", red_diffuse * .95);
+    setprop("/sim/model/DC-10-30/effects/particles/greencombined", red_diffuse * .98);
+    setprop("/sim/model/DC-10-30/effects/particles/bluecombined", red_diffuse * 1);
 
     if (foam) {
-        setprop("sim/model/firetank/waterdropparticlectrl", tankdooropen*hopperweight*particles);
+        setprop("sim/model/firetank/waterdropparticlectrl", tankdooropen * hopperweight * particles);
         setprop("sim/model/firetank/retardantdropparticlectrl", 0);
-		setprop("/sim/model/DC-10-30/effects/particles/redcombined",    red_diffuse*.95);
-		setprop("/sim/model/DC-10-30/effects/particles/greencombined",  red_diffuse*.98);
-		setprop("/sim/model/DC-10-30/effects/particles/bluecombined",   red_diffuse*1);
+        setprop("/sim/model/DC-10-30/effects/particles/redcombined", red_diffuse * .95);
+        setprop("/sim/model/DC-10-30/effects/particles/greencombined", red_diffuse * .98);
+        setprop("/sim/model/DC-10-30/effects/particles/bluecombined", red_diffuse * 1);
     } else {
-        setprop("sim/model/firetank/retardantdropparticlectrl", tankdooropen*hopperweight*particles);
+        setprop("sim/model/firetank/retardantdropparticlectrl", tankdooropen * hopperweight * particles);
         setprop("sim/model/firetank/waterdropparticlectrl", 0);
-		setprop("/sim/model/DC-10-30/effects/particles/redcombined",    red_diffuse*.89);
-		setprop("/sim/model/DC-10-30/effects/particles/greencombined",  red_diffuse*.35);
-		setprop("/sim/model/DC-10-30/effects/particles/bluecombined",   red_diffuse*.13);
+        setprop("/sim/model/DC-10-30/effects/particles/redcombined", red_diffuse * .89);
+        setprop("/sim/model/DC-10-30/effects/particles/greencombined", red_diffuse * .35);
+        setprop("/sim/model/DC-10-30/effects/particles/bluecombined", red_diffuse * .13);
     }
 
-    if (tankdooropen and hopperweight)
-    {
-		#100% salvo dump load/velocities/equivalent-kt in 8 seconds
-        #quantity is one of 4 modes, safe = 0 and 33% = 1 66% = 2 100% = 3
-		#retardant = 8.87 per lb
-		#water = 8.34 per lb
-		#retardant = 12000 gal * 8.87 weight per gal = 106440 lb / 8 sec dump = 13305 lb per sec / 100 (.01 seconds timer cycle) = 133.05 lb capacity per cycle
-		#retardant = 12000 gal / 8 sec dump = 1500 gal per sec / 100 (.01 seconds timer cycle) = 15 gal * 8.87 weight per gallon = 133.05 lbs capacity per cycle
-		#water = 12000 gal * 8.34 weight per gal = 100080 lb / 8 sec dump = 12510 lb per sec / 100 (.01 seconds timer cycle) = 125.1 lb capacity per cycle
-		#water = 12000 gal / 8 sec dump = 1500 gal per sec / 100 (.01 seconds timer cycle) = 15 gal * 8.34 weight per gallon = 125.1 lbs capacity per cycle
-		#retardent capacity = 133.05;
-		#water capacity = 125.1;
+    if (tankdooropen and hopperweight) {
 
-		if (foam) {
-			capacity = 125.1 * 8;
-			if (quantity == 1) weight = 33360;
-				else if (quantity == 2) weight = 66720;
-					else if (quantity == 3) weight = 100080;
-		} else {
-			capacity = 133.05 * 8;
-			if (quantity == 1) weight = 35480;
-				else if (quantity == 2) weight = 70960;
-					else if (quantity == 3) weight = 106440;
-		}
+		#water = 12000 gal * 8.34 weight per gal = 100080 lb / 8 sec dump = 12510 lb per sec / 100 (.01 seconds timer cycle) = 125.1 lb capacity per cycle
+		#retardant = 12000 gal * 8.87 weight per gal = 106440 lb / 8 sec dump = 13305 lb per sec / 100 (.01 seconds timer cycle) = 133.05 lb capacity per cycle
+
+        if (foam) {
+            capacity = 125.1 * 7;
+            if (quantity == 1 or quantity == 2 or quantity == 3) weight = 33360;
+				else if (quantity == 4) weight = 100080;
+        } else {
+            capacity = 133.05 * 7;
+			if (quantity == 1 or quantity == 2 or quantity == 3) weight = 35480;
+				else if (quantity == 4) weight = 106440;
+        }
         setprop("sim/model/firetank/droprate", 400);
 
-        if (volume < weight)
-        {
+        if (volume < weight) {
+            volume += capacity;
+            hopperweight -= capacity;
 
-		  if (capacity > (weight-volume))
-            capacity = (weight-volume);
-
-          volume = volume + capacity;
-          hopperweight = hopperweight - capacity;
-
-          if (hopperweight < 10)
-            {
-              volume = 0;
-              hopperweight = 0;
-              setprop("sim/weight[2]/weight-lb",0);
-              setprop("sim/model/firetank/opentankdoors", 0);
+            if (hopperweight < 10) {
+                volume = 0;
+                hopperweight = 0;
+                setprop("sim/weight[2]/weight-lb", 0);
+                setprop("sim/model/firetank/opentankdoors", 0);
+            } else {
+                setprop("sim/weight[2]/weight-lb", hopperweight);
             }
-          else
-            setprop("sim/weight[2]/weight-lb", hopperweight);
-        }
-        else
-        {
-          setprop("sim/model/firetank/opentankdoors", 0);
-		  setprop("sim/model/firetank/waterdropretardantctrl", 0);
-		  setprop("sim/model/firetank/retardantdropparticlectrl", 0);
-          volume = 0;
+        } else {
+            setprop("sim/model/firetank/opentankdoors", 0);
+            setprop("sim/model/firetank/waterdropretardantctrl", 0);
+            setprop("sim/model/firetank/retardantdropparticlectrl", 0);
+            volume = 0;
         }
     }
 
-    if (hopperweight < 0 or hopperweight == 0 or getprop("sim/weight[2]/weight-lb") < 0 or getprop("sim/weight[2]/weight-lb") == 0) {
-		volume = 0;
+    if (hopperweight <= 0 or getprop("sim/weight[2]/weight-lb") <= 0) {
+        volume = 0;
         hopperweight = 0;
         setprop("sim/weight[2]/weight-lb", 0);
-		setprop("sim/model/firetank/opentankdoors", 0);
+        setprop("sim/model/firetank/opentankdoors", 0);
     }
 
-    if (tankdooropen and hopperweight)
+    if (tankdooropen and hopperweight) {
         setprop("sim/model/firetank/waterdropretardantctrl", 1);
-    else
+    } else {
         setprop("sim/model/firetank/waterdropretardantctrl", 0);
+    }
 
-    #hopperweight/2500=8.345 per gallon
-    setprop("sim/model/watercannon/tank-volume", hopperweight/8.345);
+    setprop("sim/model/watercannon/tank-volume", hopperweight / 8.345);
     setprop("sim/model/watercannon/tank-weight", hopperweight);
 
-
-    #tank volume sensors calibrated to 80 gal, unreachable water in the tank
-    if (getprop("sim/model/watercannon/tank-volume") < 80) setprop("sim/model/watercannon/tank-volume", 80);
+    if (getprop("sim/model/watercannon/tank-volume") < 80) {
+        setprop("sim/model/watercannon/tank-volume", 80);
+    }
 }
 
 var digital_display =

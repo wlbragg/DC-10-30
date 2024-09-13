@@ -17,7 +17,19 @@
     <lighting>false</lighting>
     
     <condition>
-      <property>sim/model/firetank/retardantdropparticlectrl</property>
+      <and>
+		  <property>sim/model/firetank/retardantdropparticlectrl</property>
+		  <or>
+			  <equals>
+				<property>sim/model/firetank/quantity</property>
+				<value>2</value>
+			  </equals>
+			  <equals>
+				<property>sim/model/firetank/quantity</property>
+				<value>4</value>
+			  </equals>
+		  </or>
+	  </and>
     </condition>
     
     <attach>world</attach>
@@ -48,8 +60,8 @@
       <phi-min-deg> -2</phi-min-deg>
       <phi-max-deg>  2</phi-max-deg>
       <speed-mps>
-        <value>5.8</value>
-        <spread>3</spread>
+        <value>3</value>
+        <spread>10</spread>
       </speed-mps>
       <rotation-speed>
         <x-min-deg-sec>-15 </x-min-deg-sec>
@@ -105,8 +117,8 @@
 		</end>
 
 		<life-sec>
-			<value> 25</value>
-			<spread>20</spread>
+			<value> 15</value>
+			<spread>10</spread>
 		</life-sec>
 
 		<mass-kg> 0.000001</mass-kg>

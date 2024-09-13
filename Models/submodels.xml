@@ -69,9 +69,9 @@
     <name>waterdrop-marker-retardant</name>
     <model>Models/Geometry/null.ac</model>
     <trigger>sim/model/firetank/retardantdropparticlectrl</trigger>
-    <speed>16</speed>
+    <speed>0</speed>
     <repeat>true</repeat>
-    <delay>0.5</delay>
+    <delay>0.01</delay>
     <count>10000</count>
     <offsets>
       <x-m> 0.0</x-m>
@@ -85,9 +85,9 @@
       </pitch-deg>
     </offsets>
     <wind>true</wind>
-    <eda>1.0</eda>
-    <cd>1.50</cd>
-    <weight>1.0</weight>
+    <eda>35</eda>
+    <cd>0.75</cd>
+    <weight>1133.0</weight>
     <impact>true</impact>
     <impact-reports>sim/ai/aircraft/impact/retardant</impact-reports>
   </submodel>
@@ -97,9 +97,9 @@
     <name>waterdrop-marker-foam</name>
     <model>Models/Geometry/null.ac</model>
     <trigger>sim/model/firetank/waterdropparticlectrl</trigger>
-    <speed>16</speed>
+    <speed>0</speed>
     <repeat>true</repeat>
-    <delay>0.5</delay>
+    <delay>0.01</delay>
     <count>10000</count>
     <offsets>
       <x-m> 0.0</x-m>
@@ -113,9 +113,9 @@
       </pitch-deg>
     </offsets>
     <wind>true</wind>
-    <eda>1.0</eda>
-    <cd>1.50</cd>
-    <weight>1.0</weight>
+    <eda>35</eda>
+    <cd>0.75</cd>
+    <weight>1133.0</weight>
     <impact>true</impact>
     <impact-reports>sim/ai/aircraft/impact/foam</impact-reports>
   </submodel>
